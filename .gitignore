@@ -1,32 +1,1045 @@
-# Prerequisites
-*.d
+#include <iostream>
+#include <fstream>
+#include <unistd.h>
+#include<cstring>
+#include<iomanip>
+#include<iostream>
+using namespace std;
+/* Class definition */
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+ class payment
+ {
 
-# Precompiled Headers
-*.gch
-*.pch
+ public:
+     string atm;
+     string nmbr;
+     bool p1=false;
+     int total;
+     payment()
+     {
+     }
+     
+     void withdraw(int num)
+     {
+     if(num < total && p1 == true)
+     {
+     cout<<"Payment deduction will take 2 minutes ........\n";
+     sleep(120);
+     }
+     else if(num < total && p1 == false)
+     {
+     
+     cout<<"Payment deduction will take 1 minutes ........\n";
+     sleep(60);
+     total = total - num;
+     cout<<"Payment Done"<<endl;
+     
+     }
+     else
+     {
+     cout<<"balance not sufficient";
+     }
+     }
+     
+     bool checknum()
+     {
+     if(nmbr.length() != 11)
+     {
+     cout<<"Invalid phone number";
+     return false;
+     }
+     
+     for(int i=0;i<nmbr.length();i++)
+     {
+     if(nmbr[i] < '0' || nmbr[i] > '9')
+     {
+     cout<<"phone number must consist only digits\n";
+     return false;
+     }
+     }
+     p1 = true;
+     return true;
+     }
+     
+     
+     bool checkatm()
+     {
+     if(atm.length() != 16)
+     {
+     cout<<"Invalid atm nmbr";
+     return false;
+     }
+     
+     for(int i=0;i<atm.length();i++)
+     {
+     if(atm[i] < '0' || atm[i] > '9')
+     {
+     cout<<"atm number must consist only digits\n";
+     return false;
+     }
+     }
+     p1 = true;
+     return true;
+     }
+     
+     
+     
+ };
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
 
-# Fortran module files
-*.mod
-*.smod
+ /* Class definition */
+ class items {
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+      char item_code [10];
+      char item_name [20];
+      float item_price;
+      int item_quantity;
 
-# Executables
-*.exe
-*.out
-*.app
+  protected:
+
+      char* get_code () { return item_code; }
+      char* get_name () { return item_name; }
+      float get_price () { return item_price; }
+      int get_quantity () { return item_quantity; }
+
+      /* to set item Code */
+      void set_code (char code [10]) { strcpy (item_code, code); }
+      void set_name (char name [20]) { strcpy (item_name, name); }
+      /* to set item price */
+      void set_price (float price) { item_price =  price; }
+      /* to set item quantity */
+      void set_quantity (int quantity) { item_quantity =  quantity; }
+
+ };
+
+
+
+ /* Class definition */
+ class customer : protected items{
+
+ public:
+     /* Getters */
+     customer()
+     {
+     }
+    
+     char* get_code () 
+     { 
+     return items::get_code (); 
+     }
+     char* get_name () 
+     { 
+     return items::get_name (); 
+     }
+     float get_price () 
+     { 
+     return items::get_price (); 
+     }
+     int get_quantity () 
+     { 
+     return items::get_quantity ();
+     }
+
+     /* Setter */
+
+     /* to set item quantity */
+     void set_quantity (int quantity) 
+     { 
+     items::set_quantity (quantity); 
+     }
+     void givepayment(int num)
+     {
+     payment obj;
+     cout<<"\nSelect payment method : ";
+     cout<<"\nPress 1 for cash payment\n";
+     cout<<"\nPress 2 for atm payment\n";
+     cout<<"\npress 3 for easypaisa or jazzcash payment\n";
+     char choice;
+     cout<<"Enter your choice : ";
+     cin>>choice;
+     string num1;
+     bool check;
+     switch(choice)
+     {
+     case '1':
+     cout<<"ENter your total cash : ";
+     cin>>obj.total;
+     obj.withdraw(num);
+     
+     break;
+     case '2':
+     
+     cout<<"Enter atm number : ";
+     cin>> num1;
+     
+     cout<<"ENter your total cash : ";
+     cin>>obj.total;
+     check = obj.checkatm();
+     
+     if(check == true)
+     {
+      obj.withdraw(num);
+          
+     }
+     else
+     {
+     cout<<"Payment failed\n";
+     }
+     
+     
+     break;
+     case '3':
+     
+     cout<<"Enter phone number : ";
+     cin>> num1;
+     
+     cout<<"ENter your total cash : ";
+     cin>>obj.total;
+     check = obj.checknum();
+     
+     if(check == true)
+     {
+      obj.withdraw(num);
+          
+     }
+     else
+     {
+     cout<<"Payment failed\n";
+     }
+     break;
+     default:
+     cout<<"Invalid input\n";
+     }
+     
+     }
+     void display_catalog ();
+
+ };
+
+ void customer::display_catalog () 
+ {
+
+     cout << endl;
+     cout << "\t\t" << setw (10) << items::get_code () << "  ";
+     cout << setw (20) << items::get_name () << "  ";
+     cout << setw (10) << items::get_price ();
+
+ }
+
+
+ class manager : protected items {
+
+    public:
+        string funame[100];
+        string fpass[100];
+        int i;
+        
+        manager()
+        {
+        i=0;
+        }
+        void addman()
+        {
+        cout<<"PLease register Manger\n";
+        cout<<"ENter user name : ";
+        cin>>funame[i];
+        cout<<"ENter password : ";
+        cin>>fpass[i];
+        i++;
+        cout<<"Manager Registered Successfully\n";
+ 
+        }
+        void remman()
+        {
+          string n;
+          cout<<"Enter user name of manager to remove : ";
+          cin>>n;
+          bool check1 = false;
+          for(int j=0;j<=i;j++)
+          {
+          if(n == funame[j])
+          {
+          check1 = true;
+          
+          funame[j] = "";
+          fpass[j] = "";
+          break;
+          }
+          
+          }
+          if(check1 == true)
+          {
+          cout<<"Manger removed successfully\n";
+          }
+          else
+          {
+          cout<<"Manager not found\n";
+          }
+
+  
+        }
+  };
+  
+  
+ class admin : protected items {
+
+    public:
+
+        char* get_code () 
+        { 
+        return items::get_code (); 
+        }
+        float get_quantity () 
+        { 
+        return items::get_quantity (); 
+        }
+
+        void set_code (char code [10]) 
+        { 
+        items::set_code (code); 
+        }
+        
+        void set_name (char name [20]) 
+        { 
+        items::set_name (name); 
+        }
+        
+        void set_price (float price) 
+        { 
+        items::set_price (price); 
+        }
+        
+        void set_quantity (int quantity) 
+        { 
+        items::set_quantity (quantity); 
+        }
+        
+        void display_item () 
+        {
+
+           cout <<  endl;
+           cout   << items::get_code () << "\t";
+           cout  << items::get_name () << "\t";
+           cout  << items::get_price () << "\t";
+           cout  << items::get_quantity ();
+
+        }
+
+
+  };
+
+
+class person :public admin,manager,customer{
+
+ public:
+      string funame[100];
+      string fpass[100];
+      string cnic[100];
+      
+      int i;
+
+     person()
+     {
+     i=0;
+     }
+     
+     void display()
+     {
+     for(int j=0;j<=i;j++)
+     {
+     cout<<"\nYoue cnic : "<<cnic[j];
+     
+     cout<<"\n your name : "<<funame[j];
+    
+     }
+     }
+
+     
+ };
+
+ 
+
+ void cutfunc ();
+ void admin_acces ();
+ int cst=0;
+ char ch;    
+ manager mn;
+ person pr;
+ bool check1=false;
+ using namespace std;
+ 
+ 
+ int main() 
+ {
+
+     int acc;
+    
+
+     do 
+     {
+     //clearing the screen
+         system ("clear");
+
+          cout << "--------------menu----------------\n";
+          cout << "\npress  1. Customer";
+          cout << "\npress  2. admin";
+          cout << "\npress  3. manager";
+          cout << "\npress  4. Exit";
+          cout << "\nEnter the choice : ";
+          cin >> acc;
+
+         switch (acc) {
+
+             case 1 : 
+             {
+                      cutfunc (); // call customer function
+                      break;
+             }
+             case 2 : 
+             {
+                      cout<<"press r to Remove manager\n";
+                      cout<<"press a to add manager\n";
+                      cout<<"press s to Remove customer\n";
+                      cout<<"Press m to check managers\n";
+                      cout<<"Enter c to check customers\n";
+                      cin>>ch;
+                      switch(ch)
+                      {
+                      case 'a':
+                      mn.addman();
+                      break;
+                      case 'r':
+                      mn.remman();
+                      break;
+                      case 's':
+                      string n;
+                                cout<<"Enter user name of customer to remove : ";
+                                cin>>n;
+                                
+                                for(int j=0;j<=cst;j++)
+                                {
+                                if(n == pr.funame[j])
+                                {
+                                check1 = true;
+                                
+                                pr.funame[j] = "";
+                                pr.fpass[j] = "";
+                                break;
+                                }
+                                
+                                }
+                                if(check1 == true)
+                                {
+                                cout<<"Customer removed successfully\n";
+                                }
+                                else
+                                {
+                                cout<<"Customer not found\n";
+                                }
+
+
+                      }
+
+                      break;
+                      case 'c':
+                      cout<<"Registered Customers\n";
+                      for(int i=0;i<=cst;i++)
+                      {
+                      cout<<"Register customers Username : "<<pr.funame[i]<<endl;
+                      }
+                      
+                      break;
+                      
+                      case 'm':
+                      
+                      cout<<"Registered Managers\n";
+                      for(int i=0;i<=mn.i;i++)
+                      {
+                      cout<<"Register manager Username : "<<mn.funame[i]<<endl;
+                      }
+                      break;
+                     
+                      }
+                      break;
+             case 3 : 
+                    admin_acces();
+             break;
+             
+             case 4 : 
+                      exit (0); 
+             default :
+                       cout << "\n\t Wrong Choice!!" << '\n';
+                       /* Wait for interrupt */
+                       cin.ignore ();
+                       getchar ();
+                       break;
+
+         }
+
+     } while (1);
+
+     return 0;
+ }
+
+ /* Customer function */
+ void cutfunc () 
+ {
+
+     int ch;
+     fstream item, cart;
+     char choice;
+     string user,pass;
+     bool check1=false;
+     customer obj1;
+
+          cout<<"DO you have registered : y/n ";
+          cin>>choice;
+          if(choice == 'y' || choice == 'Y')
+          {
+          cout<<"Enter user name : ";
+          cin>>user;
+          cout<<"Enter password : ";
+          cin>>pass;
+          
+          for(int i=0;i<=cst;i++)
+          {
+          if(user == pr.funame[i] && pass == pr.fpass[i] )
+          {
+          check1 = true;
+          break;
+          }
+          
+          }
+          if(check1 == true)
+          {
+
+     do 
+     {
+
+          system ("clear");
+
+          cout << "\n\nWelcome to mystore";
+          cout << "\n";
+          cout << "\n\n1. Display item list";
+          cout << "\n 2. Add item to cart";
+          cout << "\n 3. Delete item from cart";
+          cout << "\n 4. Display cart";
+          cout << "\n 5. pay Bill";
+          cout << "\n 6. Exit";
+          cout << "\n\n Enter choice : ";
+          cin >> ch;
+
+         switch (ch) {
+
+             case 1 : 
+                      item.open ("items.dat", ios::in | ios::binary);
+                      if (item.fail ()) 
+                      {
+                          cout << "\n\n\t File does not exist" << '\n';
+                          cin.ignore ();
+                          getchar ();
+                          break;
+                      }
+                      item.seekg (0);
+                      system ("clear");
+                      cout << "\t\t" << setw (10) << "Item Code" << "  ";
+                      cout << setw (20) << "Item Name" << "  ";
+                      cout << setw (10) << "Item Price";
+                      while (1) 
+                      {
+                          item.read ((char*) &obj1, sizeof (obj1));
+                          if (item.eof ())
+                            break;
+
+                          obj1.display_catalog ();
+                      }
+                      item.close ();
+                      cin.ignore ();
+                      getchar ();
+                      break;
+
+             case 2 :
+             {
+                       cart.open("cart.txt", ios::out | ios::app);
+                       if (cart.fail ()) 
+                       {
+                           cout << "\n\n\t Cart does not exist" << '\n';
+                           cin.ignore ();
+                           getchar ();
+                           break;
+                       }
+                       system ("clear");
+                       char ans = 'y';
+                       int flag = 0;
+                       char cd [10];
+                       int qty;
+
+                       do 
+                       {
+                           item.open ("items.dat", ios::in | ios::binary);
+                           if (item.fail ()) 
+                           {
+                               cout << "\n\n\t file does not exist" << '\n';
+                               cin.ignore ();
+                               getchar ();
+                               break;
+                           }
+
+                           flag = 0;
+                           system ("clear");
+                           cout<<"\n\n\t Enter the Code of the item : ";
+                           cin>>cd;
+                           item.seekg (0);
+                           while (1) 
+                           {
+                               item.read((char*) &obj1, sizeof(obj1));
+                               if (item.eof ())
+                                break;
+                               if(!strcmp (obj1.get_code(), cd)) {
+                                   flag++;
+                                   cout << "\t\t" << setw (10) << "Item Code" << "  ";
+                                   cout << setw (20) << "Item Name" << "  ";
+                                   cout << setw (10) << "Item Price";
+                                   obj1.display_catalog ();
+                                   cout << "\n\n\t Enter the quantity needed : ";
+                                   cin >> qty;
+                                   while (obj1.get_quantity () < qty) 
+                                   {
+                                       cout << "\n\n\t The quantity entered is not possible" << '\n';
+                                       cout << "\tMax possible quantity is : " << obj1.get_quantity () << '\n';
+                                       cout << "\tEnter new quantity : ";
+                                       cin >> qty;
+                                   }
+                                   obj1.set_quantity(qty);
+                                   if (qty > 0) 
+                                   {
+                                       cart.write((char*) &obj1, sizeof(obj1));
+                                       cout << "\n\t Item added" << '\n';
+                                       cin.ignore ();
+                                       getchar ();
+                                   }
+                               }
+                           }
+                           if (!flag) 
+                           {
+                               cout << "\n\t Item with that code does not exist" << '\n';
+                           }
+                           flag= 0;
+                           cout << "\n\t Do you wanna add more items? (Y/N) : ";
+                           cin >> ans;
+                           item.close();
+                       } while (ans == 'y' || ans == 'Y');
+                       cart.close();
+                       break;
+                   }
+
+             case 3 :
+             { 
+             char cd [10];
+                       char found='f',confirm='n';
+                       cart.open("cart.txt", ios::in);
+                       if (cart.fail ()) 
+                       {
+                           cout << "\n\n\t cart does not exist" << '\n';
+                           cin.ignore ();
+                           getchar ();
+                           break;
+                       }
+                       ofstream fout;
+                       fout.open("temp.txt",ios::out);
+                       cout<<"\n\n\t Enter the code of the item you want to be deleted : ";
+                       cin>>cd;
+                       while(1) 
+                       {
+                           cart.read((char*)&obj1,sizeof(obj1));
+                           if (cart.eof ())
+                            break;
+                           if(!strcmp (obj1.get_code(), cd)) {
+                               found='t';
+                               cout << "\t\t" << setw (10) << "Item Code" << "  ";
+                               cout << setw (20) << "Item Name" << "  ";
+                               cout << setw (10) << "Item Price";
+                               obj1.display_catalog ();
+                               cout<<"\n\n\t Are you sure you want to delete this item? [y/n] : ";
+                               cin>>confirm;
+                               if(confirm=='n')
+                                 fout.write((char*)&obj1,sizeof(obj1));
+                             }
+                             else
+                                 fout.write((char*)&obj1,sizeof(obj1));
+                       }
+                       if(found=='f')
+                          cout<<"\n\n\t Item not found";
+                       cart.close();
+                       fout.close();
+                       remove("cart.txt");
+                       rename("temp.txt","cart.txt");
+                       cin.ignore ();
+                       getchar ();
+                       break;
+                     }
+
+             case 4 : 
+                      cart.open("cart.txt", ios::in);
+                      if (cart.fail ()) 
+                      {
+                          cout << "\n\n\t Cart does not exist" << '\n';
+                          cin.ignore ();
+                          getchar ();
+                          break;
+                      }
+                      cart.seekg (0);
+                      system ("clear");
+                      cout << "\n\n\t\t\t CART" << '\n';
+                      cout << "\t\t" << setw (10) << "Item Code" << "  ";
+                      cout << setw (20) << "Item Name" << "  ";
+                      cout << setw (10) << "Item Price" << "  ";
+                      cout << setw (10) << "Quantity" << '\n';
+                      while(1) 
+                      {
+                          cart.read((char*) &obj1, sizeof(obj1));
+                          if (cart.eof ())
+                             break;
+                             obj1.display_catalog ();
+                             cout << "  " << setw (10) << obj1.get_quantity ();
+                      }
+                      cart.close();
+                      cin.ignore ();
+                      getchar ();
+                      break;
+
+             case 5 :
+             { 
+                       float sum = 0;
+                       item.open ("items.dat", ios::in | ios::binary | ios::out | ios::ate);
+                       if (item.fail ()) 
+                       {
+                           cout << "\n\n\t File does not exist" << '\n';
+                           cin.ignore ();
+                           getchar ();
+                           break;
+                       }
+                       cart.open("cart.txt", ios::in);
+                       if (cart.fail ()) 
+                       {
+                           cout << "\n\n\t Cart does not exist" << '\n';
+                           cin.ignore ();
+                           item.close ();
+                           getchar ();
+                           break;
+                       }
+                       system ("clear");
+                       admin clrk;
+                       cart.seekg (0);
+                       cout << "\t\t" << setw (10) << "Item Code" << "  ";
+                       cout << setw (20) << "Item Name" << "  ";
+                       cout << setw (10) << "Item Price" << "  ";
+                       cout << setw (10) << "Quantity" << '\n';
+                       while(1) 
+                       {
+                           cart.read((char*)&obj1,sizeof(obj1));
+                           if (cart.eof ())
+                              break;
+                           obj1.display_catalog ();
+                           cout << "  " << setw (10) << obj1.get_quantity ();
+                           item.seekg (0);
+                           while (1) 
+                           {
+                               item.read ((char*) &clrk, sizeof (clrk));
+                               if (item.eof ())
+                                  break;
+                               if (!strcmp (clrk.get_code (), obj1.get_code ())) {
+                                   clrk.set_quantity (clrk.get_quantity () - obj1.get_quantity ());
+                                   item.seekp (-sizeof (clrk), ios::cur);
+                                   item.write ((char*) &clrk, sizeof (clrk));
+                                   break;
+                               }
+                           }
+                           sum+=(obj1.get_price() * obj1.get_quantity ());
+                       }
+                       cout<<"\n\n\t The total amount is $ " << sum;
+                       obj1.givepayment(sum);
+                       cin.ignore ();
+                       getchar ();
+                       cart.close ();
+                       item.close ();
+                       remove ("cart.txt");
+                       break;
+                   }
+             case 6 :   
+                        remove ("cart.txt");
+                        return;
+
+             default :
+                       cout << "\n\t Wrong choice!" << '\n';
+                       cin.ignore ();
+                       getchar ();
+
+         }
+     } while (1);
+ }
+ else
+ {
+ cout<<"Invalid username or password\n";
+ }
+ }
+ else
+ {
+ cout<<"PLease register Customer\n";
+ cout<<"ENter user name : ";
+ cin>>pr.funame[cst];
+ cout<<"ENter password : ";
+ cin>>pr.fpass[cst];
+ cst++;
+ cout<<"Customer Registered Successfully\n";
+ sleep(1);
+
+}
+ 
+ }
+
+ /* admin Function */
+ void admin_acces () {
+
+    const char *correct_password = "123456";
+    char* buf;
+     cout << endl;
+     string password;
+     cout<<"Please enter the password: ";
+     cin>>password;
+
+     if (password != correct_password) {
+         cout << "\n\n\t Wrong Password" << '\n';
+         cin.ignore ();
+         getchar ();
+         return;
+     }
+
+     int ch;
+     admin clrk;
+     char code [10], name [20], ans;
+     float price;
+     int quantity;
+     int size, flag = 0, pos;
+
+     fstream item;
+     item.open ("items.dat", ios::in | ios::binary | ios::out | ios::app);
+     item.close ();
+
+     do {
+
+         system ("clear");
+
+         cout << "\n\n\nWelcome to store";
+         cout << "\n\n Menu";
+         cout << "\n 1. Display item list";
+         cout << "\n 2. Add items";
+         cout << "\n 3. Delete item";
+         cout << "\n 4. Modify item";
+         cout << "\n 5. Exit";
+         cout << "\n Enter the choice : ";
+         cin >> ch;
+
+         switch (ch)
+         {
+
+             case 1 : 
+             item.open ("items.dat", ios::in | ios::binary);
+                      if (item.fail ()) {
+                          cout << "\nfile couldn't open ";
+                          cin.ignore ();
+                          getchar ();
+                          break;
+                      }
+                      item.seekg (0, ios::beg);
+                      system ("clear");
+                      cout << "\t\t" << setw (10) << "Item Code" << "  ";
+                      cout << setw (20) << "Item Name" << "  ";
+                      cout << setw (10) << "Item Price" << "  ";
+                      cout << setw (10) << "Quantity";
+                      while (1) 
+                      {
+                          item.read ((char*) &clrk, sizeof (clrk));
+                          if (item.eof ())
+                            break;
+                          clrk.display_item ();
+                      }
+                      item.close ();
+                      cin.ignore ();
+                      getchar ();
+                      break;
+
+             case 2 : 
+                      flag = 0;
+                      item.open ("items.dat", ios::in | ios::binary);
+                      if (item.fail ()) 
+                      {
+                          cout << "\n\t File couldn't open";
+                          cin.ignore ();
+                          getchar ();
+                          break;
+                      }
+                      system ("clear");
+                      item.seekg (0, ios::beg);
+                      cout<<"\n\n\tPlease Enter the Item Code : ";
+                      cin >>code;
+                      while (1)
+                      {
+                          item.read ((char*) &clrk, sizeof (clrk));
+                          if (item.eof ())
+                            break;
+                          if (! strcmp (clrk.get_code (), code))
+                              flag++;
+                      }
+                      if (flag != 0) 
+                      {
+                          cout << "\n\n\t Entered code already exists" << '\n';
+                          item.close ();
+                          cin.ignore ();
+                          getchar ();
+                          break;
+                      }
+                      item.close ();
+                      cout<<"\n\tPlease Enter The Item Name : ";
+                      cin >>name;
+                      cout<<"\n\tPlease Enter The Item Price : ";
+                      cin>>price;
+                      cout<<"\n\tPlease Enter The Item Quantity : ";
+                      cin>>quantity;
+                      clrk.set_code (code);
+                      clrk.set_name (name);
+                      clrk.set_price (price);
+                      clrk.set_quantity (quantity);
+                      item.open ("items.dat", ios::binary | ios::out | ios::app);
+                      item.write ((char*) &clrk, sizeof (clrk));
+                      cout << "\n\t written in file" << '\n';
+                      item.close ();
+                      cin.ignore ();
+                      getchar ();
+                      break;
+
+             case 3 :{
+                      item.open ("items.dat", ios::in | ios::binary);
+                      ofstream file;
+                      int check = 0;
+                      file.open ("temp.dat", ios::out | ios::binary | ios::app);
+                      if (item.fail ()) {
+                           cout << "\n\n\t File does not exist" << '\n';
+                          file.close ();
+                          remove ("temp.dat");
+                           cin.ignore ();
+                          getchar ();
+                          break;
+                      }
+                      system ("clear");
+                       cout << "\n\n\t Enter the code of item which you wanna delete : ";
+                       cin >> code;
+                      item.seekg (0);
+                      while (1) {
+                          flag = 0;
+                          item.read ((char*) &clrk, sizeof (clrk));
+                          if (item.eof ())
+                            break;
+                          if (! strcmp (clrk.get_code (), code)) {
+                               cout << "\t\t" <<  setw (10) << "Item Code" << "  ";
+                               cout <<  setw (20) << "Item Name" << "  ";
+                               cout <<  setw (10) << "Item Price" << "  ";
+                               cout <<  setw (10) << "Quantity";
+                              clrk.display_item ();
+                               cout << "\n\n\t Do you wanna delete it ? (y/n) : ";
+                               cin >> ans;
+                              if (ans == 'y' || ans == 'Y') {
+                                 cout << "\n\n\tDeleted" << '\n';
+                                flag++;
+                              }
+                              check++;
+                          }
+                          if (!flag)
+                            file.write ((char*) &clrk, sizeof (clrk));
+                      }
+                      if (!check)
+                      cout << "\n\t Item does not exist" << '\n';
+                      item.close ();
+                      file.close ();
+                      remove ("items.dat");
+                      rename ("temp.dat", "items.dat");
+                      cin.ignore ();
+                      getchar ();
+                      break;
+                  }
+
+             case 4 : 
+             item.open ("items.dat", ios::in | ios::binary | ios::out | ios::ate);
+                      if (item.fail ()) {
+                           cout << "\n\n\t File does not exist" << '\n';
+                           cin.ignore ();
+                          getchar ();
+                          break;
+                      }
+                      system ("clear");
+                       cout << "\n\n\t Enter the code of item you wanna modify : ";
+                       cin >> code;
+                      flag = 0;
+                      item.seekg (0);
+                      while (1) {
+                          pos = item.tellg ();
+                          item.read ((char*) &clrk, sizeof (clrk));
+                          if (item.eof ())
+                            break;
+                          if (! strcmp (clrk.get_code (), code)) {
+                               cout << "\t\t" <<  setw (10) << "Item Code" << "  ";
+                               cout <<  setw (20) << "Item Name" << "  ";
+                               cout <<  setw (10) << "Item Price" << "  ";
+                               cout <<  setw (10) << "Quantity";
+                               clrk.display_item ();
+                               cout << "\n\n\t Enter modified details : " << '\n';
+                               cout << "\n Enter modified code : ";
+                               cin >> code;
+                               cout << "\n Enter modified name : ";
+                               cin >> name;
+                               cout << "\n Enter the modified price : ";
+                               cin >> price;
+                               cout << "\n Enter the modified quantity : ";
+                               cin >> quantity;
+                              flag++;
+                              break;
+                          }
+                      }
+                      if (flag == 0) {
+                         cout << "\n\t Item does not exist" << '\n';
+                        item.close ();
+                         cin.ignore ();
+                        getchar ();
+                        break;
+                      }
+                      item.seekp (pos);
+                      clrk.set_code (code);
+                      clrk.set_name (name);
+                      clrk.set_price (price);
+                      clrk.set_quantity (quantity);
+                      item.write ((char*) &clrk, sizeof (clrk));
+                      system ("clear");
+
+                       cout << "\n\n\t After modification" << '\n';
+                       cout << "\t\t" <<  setw (10) << "Item Code" << "  ";
+                       cout <<  setw (20) << "Item Name" << "  ";
+                       cout <<  setw (10) << "Item Price" << "  ";
+                       cout <<  setw (10) << "Quantity";
+                      clrk.display_item ();
+
+                      item.close ();
+                       cin.ignore ();
+                      getchar ();
+                      break;
+
+             case 5 : return;
+
+             default :  cout << "\n\t Wrong choice!! " << '\n';
+                        cin.ignore ();
+                       getchar ();
+
+         }
+
+     } while (1);
+
+ }
